@@ -66,6 +66,21 @@ async function run() {
       const result = await purchaseCollection.insertOne(bookService)
       res.send(result)
     })
+
+    app.get('/manageService/:providerEmail',async(req,res)=>{
+  
+      console.log(req.params.email)
+    const result = await serviceCollection.find({email:req.params.email}).toArray()
+      res.send(result)
+    })
+
+    app.delete('/addServices/:id',async(req,res)=>{
+      const id = req.params.id
+      const query = {_id:new ObjectId(id)}
+      const result = await serviceCollection.deleteOne(query)
+      res.send(result)
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
