@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express()
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const port = process.env.PORT || 6003
 
@@ -30,6 +30,7 @@ async function run() {
     await client.connect();
 
     const serviceCollection = client.db("serviceDB").collection("service")
+    const purchaseCollection = client.db("serviceDB").collection("purchase")
 
     app.post('/addServices',async(req,res)=>{
         const newServices = req.body
@@ -42,6 +43,27 @@ async function run() {
     app.get('/addServices',async(req,res)=>{
       const cursor = serviceCollection.find()
       const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.get('/viewDetails/:id',async(req,res)=>{
+      const id = req.params.id
+      const query = {_id:new ObjectId(id)}
+      const result = await serviceCollection.findOne(query)
+      res.send(result)
+    })
+
+    app.get('/purchase/:id',async(req,res)=>{
+      const id = req.params.id
+      const query = {_id:new ObjectId(id)}
+      const result = await serviceCollection.findOne(query)
+      res.send(result)
+    })
+
+    app.post('/purchase',async(req,res)=>{
+      const bookService = req.body
+      // console.log(bookService)
+      const result = await purchaseCollection.insertOne(bookService)
       res.send(result)
     })
     // Send a ping to confirm a successful connection
