@@ -112,6 +112,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/serviceToDo/:email',async(req,res)=>{
+      const email = req.params.email;
+      const query = { providerEmail: email };
+      const result = await purchaseCollection.find(query).toArray();
+      res.send(result);
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
